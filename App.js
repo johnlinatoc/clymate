@@ -19,6 +19,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -27,32 +29,35 @@ class App extends Component {
     }
   }
 
+  // API-KEY:
+  // ZIP-CODE KEY: 26481_PC
+  //auto complete: GET /locations/v1/cities/autocomplete?apikey=rryg7NRLGy7oOhWLVHIWfOQG0ZytEtrE&q=chicag
   componentDidMount(){
+    // 'http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=(insert api key)&q=chicag'
     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(resp => resp.json())
     .then(data => this.setState({ data }))
+    .catch(err => console.log(err))
   }
 
   renderTitles(){
     const { data } = this.state;
-
-    return data.map(entry => <Text> { entry.title }</Text>)
+    return data.map(entry => <Text  style={styles.text}> Title: { entry.title[0].toUpperCase() + entry.title.slice(1) + '.' } </Text>)
   }
 
 
   render(){
-    const DATA = this.state.data;
+    const { data } = this.state;
+    console.log(data)
+    console.log(`${process.env.REACT_APP_API_KEY}`)
+
     return (
-      <ScrollView style={styles.container}>
-        <SectionList
-          sections={DATA}
-          renderItem={({ item }) => return (
-            <View>
-              <Text> { item.title }</Text>
-            </View>)
-          }
-        />
-      </ScrollView>
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          {this.renderTitles()}
+        </ScrollView>
+
+      </SafeAreaView>
     );
   }
 }
@@ -60,14 +65,19 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 100,
   },
   scrollView: {
     backgroundColor: 'pink',
     marginHorizontal: 20,
   },
   text: {
-    fontSize: 42,
+    alignSelf: 'stretch',
+    margin: 10,
+    fontSize: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee'
   },
 });
 
