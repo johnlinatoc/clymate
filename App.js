@@ -19,7 +19,18 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import LinearGradient from 'react-native-linear-gradient';
 
+const API_KEY = ''
+
+// {
+//   "id": 3582383,
+//   "name": "Chicago",
+//   "country": "BZ",
+//   "coord": {
+//     "lon": -88.300003,
+//     "lat": 17.799999
+//   }
 
 class App extends Component {
   constructor(props){
@@ -29,11 +40,7 @@ class App extends Component {
     }
   }
 
-  // API-KEY:
-  // ZIP-CODE KEY: 26481_PC
-  //auto complete: GET /locations/v1/cities/autocomplete?apikey=rryg7NRLGy7oOhWLVHIWfOQG0ZytEtrE&q=chicag
   componentDidMount(){
-    // 'http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=(insert api key)&q=chicag'
     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(resp => resp.json())
     .then(data => this.setState({ data }))
@@ -53,10 +60,11 @@ class App extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView>
-          {this.renderTitles()}
-        </ScrollView>
-
+      <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
+        <Text style={styles.buttonText}>
+          Sign in with Facebook
+        </Text>
+      </LinearGradient>
       </SafeAreaView>
     );
   }
@@ -78,6 +86,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#eee'
+  },
+  linearGradient: {
+  flex: 1,
+  paddingLeft: 15,
+  paddingRight: 15,
+  borderRadius: 5
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
   },
 });
 
