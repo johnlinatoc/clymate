@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   SafeAreaView,
@@ -14,6 +6,8 @@ import {
   View,
   Text,
   StatusBar,
+  FlatList,
+  SectionList,
 } from 'react-native';
 
 
@@ -26,21 +20,39 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state ={
+      data: [],
+    }
+  }
 
-  fetchPosts = () => {
-    fetch(jsonplaceholder.typicode.com/posts)
-    .then(data => data.json())
-    .then(resp => <Text>resp.title</Text>)
+  componentDidMount(){
+    fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(resp => resp.json())
+    .then(data => this.setState({ data }))
+  }
+
+  renderTitles(){
+    const { data } = this.state;
+
+    return data.map(entry => <Text> { entry.title }</Text>)
   }
 
 
   render(){
+    const DATA = this.state.data;
     return (
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-          {this.fetchPosts}
-        </ScrollView>
-      </SafeAreaView>
+      <ScrollView style={styles.container}>
+        <SectionList
+          sections={DATA}
+          renderItem={({ item }) => return (
+            <View>
+              <Text> { item.title }</Text>
+            </View>)
+          }
+        />
+      </ScrollView>
     );
   }
 }
