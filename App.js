@@ -23,14 +23,13 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
-
-// http://api.openweathermap.org/data/2.5/weather?q=chicago&appid=97813b71a5e09aec0884363b28718e5c
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
       value: '',
+      hourlyData: []
     };
   }
 
@@ -42,6 +41,11 @@ class App extends Component {
     )
     .then(resp => resp.json())
     .then(data => this.setState({data}))
+    .catch(err => console.log(err));
+
+    fetch(`https://samples.openweathermap.org/data/2.5/forecast/hourly?q=${city},usl&appid=${API_KEY}`)
+    .then(resp => resp.json())
+    .then(data => this.setState({hourlyData: data}))
     .catch(err => console.log(err));
   }
 
@@ -72,9 +76,9 @@ onChangeTxt(text) {
 }
 
   render() {
-    const {data, value} = this.state;
+    const {data, value, hourlyData} = this.state;
     {
-      data.weather ? console.log(data, data.weather[0]) : null;
+      data.weather ? console.log(hourlyData) : null;
     }
 
     if (data.weather) {
