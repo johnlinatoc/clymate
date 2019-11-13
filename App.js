@@ -9,6 +9,7 @@ import {
   FlatList,
   SectionList,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -21,7 +22,6 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
-const API_KEY = '97813b71a5e09aec0884363b28718e5c';
 const city = 'chicago';
 
 // http://api.openweathermap.org/data/2.5/weather?q=chicago&appid=97813b71a5e09aec0884363b28718e5c
@@ -62,14 +62,14 @@ class App extends Component {
     );
   }
 
-onChangeText(text) {
+onChangeTxt(text) {
   this.setState({
     value: text
   })
 }
 
   render() {
-    const {data} = this.state;
+    const {data, value} = this.state;
     {
       data.weather ? console.log(data, data.weather[0]) : null;
     }
@@ -81,12 +81,12 @@ onChangeText(text) {
           style={styles.linearGradient}>
           <SafeAreaView style={styles.container}>
             <TextInput
-              style={{height: 40, borderColor: 'gray', borderWidth: 1}
-              onChangeText={text => this.onChangeText(text)}
-              value={this.state.value}
-            }
+              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+              onChangeText={text => this.onChangeTxt(text)}
+              value={value}
             />
             {this.renderWeatherInfo()}
+            <Text>{this.state.value}</Text>
           </SafeAreaView>
         </LinearGradient>
       );
@@ -97,7 +97,7 @@ onChangeText(text) {
         colors={['#4c669f', '#192f6a']}
         style={styles.linearGradient}>
         <SafeAreaView style={styles.container}>
-          <Text>Loading</Text>
+          <ActivityIndicator size="large" color="#0000ff" />
         </SafeAreaView>
       </LinearGradient>
     );
