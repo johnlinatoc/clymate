@@ -10,6 +10,7 @@ import {
   SectionList,
   TextInput,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 
 import {
@@ -36,7 +37,7 @@ class App extends Component {
   onCitySubmit(){
     const city = this.state.value;
 
-    return fetch(
+    fetch(
       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${API_KEY}`,
     )
     .then(resp => resp.json())
@@ -65,7 +66,8 @@ class App extends Component {
 
 onChangeTxt(text) {
   this.setState({
-    value: text
+    value: text,
+    data: []
   })
 }
 
@@ -91,6 +93,8 @@ onChangeTxt(text) {
               onSubmitEditing={text => this.onCitySubmit()}
             />
             {this.renderWeatherInfo()}
+            <Image source={{uri: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}}
+              style={{width: 100, height: 100}}/>
           </SafeAreaView>
         </LinearGradient>
       );
