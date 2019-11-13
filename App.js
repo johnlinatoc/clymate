@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,8 +8,8 @@ import {
   StatusBar,
   FlatList,
   SectionList,
+  TextInput,
 } from 'react-native';
-
 
 import {
   Header,
@@ -21,51 +21,85 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
-const API_KEY = ''
+const API_KEY = '97813b71a5e09aec0884363b28718e5c';
+const city = 'chicago';
 
-// {
-//   "id": 3582383,
-//   "name": "Chicago",
-//   "country": "BZ",
-//   "coord": {
-//     "lon": -88.300003,
-//     "lat": 17.799999
-//   }
-
+// http://api.openweathermap.org/data/2.5/weather?q=chicago&appid=97813b71a5e09aec0884363b28718e5c
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state ={
+    this.state = {
       data: [],
+      value: ''
+    };
+  }
+
+  componentDidMount() {
+    fetch(
+      `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${API_KEY}`,
+    )
+      .then(resp => resp.json())
+      .then(data => this.setState({data}))
+      .catch(err => console.log(err));
+  }
+
+  renderWeatherInfo() {
+    const {data} = this.state;
+    return (
+      <>
+        <Text style={styles.text}>City: Chicago</Text>
+        <Text style={styles.text}>
+          Current Temp: {Math.round(data.main.temp)}˚ degrees
+        </Text>
+        <Text style={styles.text}>
+          Max Temp: {Math.round(data.main.temp_max)}˚ degrees
+        </Text>
+        <Text style={styles.text}>
+          Min Temp: {Math.round(data.main.temp_min)}˚ degrees
+        </Text>
+        <Text style={styles.text}>{data.weather[0].description}</Text>
+      </>
+    );
+  }
+
+onChangeText(text) {
+  this.setState({
+    value: text
+  })
+}
+
+  render() {
+    const {data} = this.state;
+    {
+      data.weather ? console.log(data, data.weather[0]) : null;
     }
-  }
 
-  componentDidMount(){
-    fetch('https://jsonplaceholder.typicode.com/posts')
-    .then(resp => resp.json())
-    .then(data => this.setState({ data }))
-    .catch(err => console.log(err))
-  }
-
-  renderTitles(){
-    const { data } = this.state;
-    return data.map(entry => <Text  style={styles.text}> Title: { entry.title[0].toUpperCase() + entry.title.slice(1) + '.' } </Text>)
-  }
-
-
-  render(){
-    const { data } = this.state;
-    console.log(data)
-    console.log(`${process.env.REACT_APP_API_KEY}`)
+    if (data.weather) {
+      return (
+        <LinearGradient
+          colors={['#4c669f', '#192f6a']}
+          style={styles.linearGradient}>
+          <SafeAreaView style={styles.container}>
+            <TextInput
+              style={{height: 40, borderColor: 'gray', borderWidth: 1}
+              onChangeText={text => this.onChangeText(text)}
+              value={this.state.value}
+            }
+            />
+            {this.renderWeatherInfo()}
+          </SafeAreaView>
+        </LinearGradient>
+      );
+    }
 
     return (
-      <SafeAreaView style={styles.container}>
-      <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
-        <Text style={styles.buttonText}>
-          Sign in with Facebook
-        </Text>
+      <LinearGradient
+        colors={['#4c669f', '#192f6a']}
+        style={styles.linearGradient}>
+        <SafeAreaView style={styles.container}>
+          <Text>Loading</Text>
+        </SafeAreaView>
       </LinearGradient>
-      </SafeAreaView>
     );
   }
 }
@@ -85,13 +119,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee'
+    borderBottomColor: '#eee',
   },
   linearGradient: {
-  flex: 1,
-  paddingLeft: 15,
-  paddingRight: 15,
-  borderRadius: 5
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
   },
   buttonText: {
     fontSize: 18,
