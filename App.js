@@ -22,7 +22,6 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
-const city = 'chicago';
 
 // http://api.openweathermap.org/data/2.5/weather?q=chicago&appid=97813b71a5e09aec0884363b28718e5c
 class App extends Component {
@@ -30,24 +29,26 @@ class App extends Component {
     super(props);
     this.state = {
       data: [],
-      value: ''
+      value: '',
     };
   }
 
-  componentDidMount() {
-    fetch(
+  onCitySubmit(){
+    const city = this.state.value;
+
+    return fetch(
       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${API_KEY}`,
     )
-      .then(resp => resp.json())
-      .then(data => this.setState({data}))
-      .catch(err => console.log(err));
+    .then(resp => resp.json())
+    .then(data => this.setState({data}))
+    .catch(err => console.log(err));
   }
 
   renderWeatherInfo() {
-    const {data} = this.state;
+    const {data, value} = this.state;
     return (
       <>
-        <Text style={styles.text}>City: Chicago</Text>
+        <Text style={styles.text}>City: {value}</Text>
         <Text style={styles.text}>
           Current Temp: {Math.round(data.main.temp)}˚ degrees
         </Text>
@@ -81,12 +82,15 @@ onChangeTxt(text) {
           style={styles.linearGradient}>
           <SafeAreaView style={styles.container}>
             <TextInput
-              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+              style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
               onChangeText={text => this.onChangeTxt(text)}
               value={value}
+              clearButtonMode={'while-editing'}
+              returnKeyType={'search'}
+              textContentType={'addressCity'}
+              onSubmitEditing={text => this.onCitySubmit()}
             />
             {this.renderWeatherInfo()}
-            <Text>{this.state.value}</Text>
           </SafeAreaView>
         </LinearGradient>
       );
@@ -97,7 +101,15 @@ onChangeTxt(text) {
         colors={['#4c669f', '#192f6a']}
         style={styles.linearGradient}>
         <SafeAreaView style={styles.container}>
-          <ActivityIndicator size="large" color="#0000ff" />
+        <TextInput
+        style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
+        onChangeText={text => this.onChangeTxt(text)}
+        value={value}
+        clearButtonMode={'while-editing'}
+        returnKeyType={'search'}
+        textContentType={'addressCity'}
+        onSubmitEditing={text => this.onCitySubmit()}
+        />
         </SafeAreaView>
       </LinearGradient>
     );
