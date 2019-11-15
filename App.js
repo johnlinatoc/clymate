@@ -23,18 +23,19 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      value: '',
-      hourlyData: []
+      city: '',
+      fiveDayForecast: []
     };
   }
 
   onCitySubmit(){
-    const city = this.state.value;
+    const city = this.state.city;
 
     fetch(
       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${API_KEY}`,
@@ -43,17 +44,17 @@ class App extends Component {
     .then(data => this.setState({data}))
     .catch(err => console.log(err));
 
-    fetch(`https://samples.openweathermap.org/data/2.5/forecast/hourly?q=${city},usl&appid=${API_KEY}`)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city},us&appid=${API_KEY}`)
     .then(resp => resp.json())
-    .then(data => this.setState({hourlyData: data}))
+    .then(data => this.setState({fiveDayForecast: data}))
     .catch(err => console.log(err));
   }
 
   renderWeatherInfo() {
-    const {data, value} = this.state;
+    const {data, city} = this.state;
     return (
       <>
-        <Text style={styles.text}>City: {value}</Text>
+        <Text style={styles.text}>City: {city}</Text>
         <Text style={styles.text}>
           Current Temp: {Math.round(data.main.temp)}˚ degrees
         </Text>
@@ -68,20 +69,37 @@ class App extends Component {
     );
   }
 
+  renderFiveDayForecast(){
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    let unix_timestamp = this.state.fiveDayForecast.list[0].dt
+    let date = new Date(unix_timestamp*1000);
+    // Hours part from the timestamp
+    let hours = date.getHours();
+    // Minutes part from the timestamp
+    let minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+    let seconds = "0" + date.getSeconds();
+    console.log(hours, minutes, seconds)
+  }
+
 onChangeTxt(text) {
   this.setState({
-    value: text,
+    city: text,
     data: []
   })
 }
 
   render() {
-    const {data, value, hourlyData} = this.state;
-    {
-      data.weather ? console.log(hourlyData) : null;
-    }
+    const {data, city, fiveDayForecast} = this.state;
 
-    if (data.weather) {
+    // {
+    //   data.weather ? console.log(fiveDayForecast.list) : null;
+    // }
+
+    if (fiveDayForecast.list) {
+      {this.renderFiveDayForecast()}
+      console.log(fiveDayForecast.list[0].dt)
       return (
         <LinearGradient
           colors={['#4c669f', '#192f6a']}
@@ -90,7 +108,7 @@ onChangeTxt(text) {
             <TextInput
               style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
               onChangeText={text => this.onChangeTxt(text)}
-              value={value}
+              value={city}
               clearButtonMode={'while-editing'}
               returnKeyType={'search'}
               textContentType={'addressCity'}
@@ -112,7 +130,7 @@ onChangeTxt(text) {
         <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
         onChangeText={text => this.onChangeTxt(text)}
-        value={value}
+        value={city}
         clearButtonMode={'while-editing'}
         returnKeyType={'search'}
         textContentType={'addressCity'}
