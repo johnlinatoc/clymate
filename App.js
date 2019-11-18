@@ -44,7 +44,7 @@ class App extends Component {
     .then(data => this.setState({data}))
     .catch(err => console.log(err));
 
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city},us&appid=${API_KEY}`)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city},us&units=imperial&appid=${API_KEY}`)
     .then(resp => resp.json())
     .then(data => this.setState({fiveDayForecast: data}))
     .catch(err => console.log(err));
@@ -72,7 +72,41 @@ class App extends Component {
   renderFiveDayForecast(){
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-    let unix_timestamp = this.state.fiveDayForecast.list[0].dt
+    const { fiveDayForecast } = this.state;
+    const firstFiveForecasts = fiveDayForecast.list.slice(0, 5)
+
+    return firstFiveForecasts.map(forecast => {
+      // this.renderTime(time)
+      // let date = new Date(unix_timestamp*1000);
+      // // Hours part from the timestamp
+      // let hours = date.getHours();
+      // // Minutes part from the timestamp
+      // let minutes = "0" + date.getMinutes();
+      // // Seconds part from the timestamp
+      // let seconds = "0" + date.getSeconds();
+
+      return (
+        <>
+          <Text style={styles.text}>
+            Time: {forecast.main.dt_txt}
+          </Text>
+          <Text style={styles.text}>
+            Current Temp: {Math.round(forecast.main.temp)}˚ degrees
+          </Text>
+          <Text style={styles.text}>
+            Max Temp: {Math.round(forecast.main.temp_max)}˚ degrees
+          </Text>
+          <Text style={styles.text}>
+            Min Temp: {Math.round(forecast.main.temp_min)}˚ degrees
+          </Text>
+          <Text style={styles.text}>{forecast.weather[0].description}</Text>
+        </>
+      );
+    })
+  }
+
+  renderTime(time){
+    let unix_timestamp = time;
     let date = new Date(unix_timestamp*1000);
     // Hours part from the timestamp
     let hours = date.getHours();
@@ -80,7 +114,6 @@ class App extends Component {
     let minutes = "0" + date.getMinutes();
     // Seconds part from the timestamp
     let seconds = "0" + date.getSeconds();
-    console.log(hours, minutes, seconds)
   }
 
 onChangeTxt(text) {
@@ -174,5 +207,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
-
-export default App;
