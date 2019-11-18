@@ -13,18 +13,10 @@ import {
   Image,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 import LinearGradient from 'react-native-linear-gradient';
+import Header from './components/header/index'
 
-
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +27,7 @@ class App extends Component {
   }
 
   onCitySubmit(){
-    const city = this.state.city;
+  const city  = this.state.city;
 
     fetch(
       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${API_KEY}`,
@@ -138,6 +130,7 @@ onChangeTxt(text) {
           colors={['#4c669f', '#192f6a']}
           style={styles.linearGradient}>
           <SafeAreaView style={styles.container}>
+          <Header/>
             <TextInput
               style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
               onChangeText={text => this.onChangeTxt(text)}
@@ -160,6 +153,7 @@ onChangeTxt(text) {
         colors={['#4c669f', '#192f6a']}
         style={styles.linearGradient}>
         <SafeAreaView style={styles.container}>
+        <Header/>
         <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
         onChangeText={text => this.onChangeTxt(text)}
