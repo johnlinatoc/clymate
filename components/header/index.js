@@ -1,20 +1,19 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet } from 'react-native'
+import {SafeAreaView, Text, StyleSheet} from 'react-native';
+
 
 const Header = (props) => {
-  return(
-    <SafeAreaView>
-      <Text styles={{fontSize: 400}}>
-        Header
-      </Text>
-    </SafeAreaView>
-  )
-}
+  return (
+    <Text className="headerComponent" style={style.text}>
+      Header
+    </Text>
+  );
+};
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   text: {
-    fontSize: 40,
-  }
-})
+    fontSize: 50,
+  },
+});
 
-export default Header
+export default Header;
