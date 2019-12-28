@@ -22,9 +22,11 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import LinearGradient from 'react-native-linear-gradient';
+import { GenericTextInput } from './components/GenericTextInput/GenericTextInput'
 
+const API_KEY = '97813b71a5e09aec0884363b28718e5c'
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -125,28 +127,18 @@ onChangeTxt(text) {
 
   render() {
     const {data, city, fiveDayForecast} = this.state;
-
-    // {
-    //   data.weather ? console.log(fiveDayForecast.list) : null;
-    // }
+    console.log(this.state)
 
     if (fiveDayForecast.list) {
-      {this.renderFiveDayForecast()}
-      console.log(fiveDayForecast.list[0].dt)
       return (
         <LinearGradient
           colors={['#4c669f', '#192f6a']}
           style={styles.linearGradient}>
           <SafeAreaView style={styles.container}>
-            <TextInput
-              style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
-              onChangeText={text => this.onChangeTxt(text)}
-              value={city}
-              clearButtonMode={'while-editing'}
-              returnKeyType={'search'}
-              textContentType={'addressCity'}
-              onSubmitEditing={text => this.onCitySubmit()}
-            />
+          <GenericTextInput
+            value={city}
+            onChangeText={(text) => this.onChangeTxt(text)}
+            onCitySubmit={text => this.onCitySubmit()}/>
             {this.renderWeatherInfo()}
             <Image source={{uri: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}}
               style={{width: 100, height: 100}}/>
@@ -160,15 +152,10 @@ onChangeTxt(text) {
         colors={['#4c669f', '#192f6a']}
         style={styles.linearGradient}>
         <SafeAreaView style={styles.container}>
-        <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
-        onChangeText={text => this.onChangeTxt(text)}
-        value={city}
-        clearButtonMode={'while-editing'}
-        returnKeyType={'search'}
-        textContentType={'addressCity'}
-        onSubmitEditing={text => this.onCitySubmit()}
-        />
+          <GenericTextInput
+            value={city}
+            onChangeText={(text) => this.onChangeTxt(text)}
+            onCitySubmit={text => this.onCitySubmit()}/>
         </SafeAreaView>
       </LinearGradient>
     );
