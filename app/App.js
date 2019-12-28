@@ -13,31 +13,22 @@ import {
   Image,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 import LinearGradient from 'react-native-linear-gradient';
 import { GenericTextInput } from './components/GenericTextInput/GenericTextInput'
 
-const API_KEY = '97813b71a5e09aec0884363b28718e5c'
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      city: '',
-      fiveDayForecast: []
+      value: '',
+      hourlyData: []
     };
   }
 
   onCitySubmit(){
-    const city = this.state.city;
+  const city  = this.state.city;
 
     fetch(
       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${API_KEY}`,
@@ -48,15 +39,15 @@ export default class App extends Component {
 
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city},us&units=imperial&appid=${API_KEY}`)
     .then(resp => resp.json())
-    .then(data => this.setState({fiveDayForecast: data}))
+    .then(data => this.setState({hourlyData: data}))
     .catch(err => console.log(err));
   }
 
   renderWeatherInfo() {
-    const {data, city} = this.state;
+    const {data, value} = this.state;
     return (
       <>
-        <Text style={styles.text}>City: {city}</Text>
+        <Text style={styles.text}>City: {value}</Text>
         <Text style={styles.text}>
           Current Temp: {Math.round(data.main.temp)}˚ degrees
         </Text>
@@ -120,7 +111,7 @@ export default class App extends Component {
 
 onChangeTxt(text) {
   this.setState({
-    city: text,
+    value: text,
     data: []
   })
 }
