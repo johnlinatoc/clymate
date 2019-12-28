@@ -16,13 +16,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Header from './components/header/index'
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      city: '',
-      fiveDayForecast: []
+      value: '',
+      hourlyData: []
     };
   }
 
@@ -38,15 +38,15 @@ export default class App extends Component {
 
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city},us&units=imperial&appid=${API_KEY}`)
     .then(resp => resp.json())
-    .then(data => this.setState({fiveDayForecast: data}))
+    .then(data => this.setState({hourlyData: data}))
     .catch(err => console.log(err));
   }
 
   renderWeatherInfo() {
-    const {data, city} = this.state;
+    const {data, value} = this.state;
     return (
       <>
-        <Text style={styles.text}>City: {city}</Text>
+        <Text style={styles.text}>City: {value}</Text>
         <Text style={styles.text}>
           Current Temp: {Math.round(data.main.temp)}˚ degrees
         </Text>
@@ -110,21 +110,18 @@ export default class App extends Component {
 
 onChangeTxt(text) {
   this.setState({
-    city: text,
+    value: text,
     data: []
   })
 }
 
   render() {
-    const {data, city, fiveDayForecast} = this.state;
+    const {data, value, hourlyData} = this.state;
+    {
+      data.weather ? console.log(hourlyData) : null;
+    }
 
-    // {
-    //   data.weather ? console.log(fiveDayForecast.list) : null;
-    // }
-
-    if (fiveDayForecast.list) {
-      {this.renderFiveDayForecast()}
-      console.log(fiveDayForecast.list[0].dt)
+    if (data.weather) {
       return (
         <LinearGradient
           colors={['#4c669f', '#192f6a']}
@@ -134,7 +131,7 @@ onChangeTxt(text) {
             <TextInput
               style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
               onChangeText={text => this.onChangeTxt(text)}
-              value={city}
+              value={value}
               clearButtonMode={'while-editing'}
               returnKeyType={'search'}
               textContentType={'addressCity'}
@@ -157,7 +154,7 @@ onChangeTxt(text) {
         <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 5, backgroundColor: 'white'}}
         onChangeText={text => this.onChangeTxt(text)}
-        value={city}
+        value={value}
         clearButtonMode={'while-editing'}
         returnKeyType={'search'}
         textContentType={'addressCity'}
